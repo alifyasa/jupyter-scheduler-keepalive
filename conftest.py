@@ -4,9 +4,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from jupyter_scheduler.orm import Base
-from jupyter_scheduler.scheduler import Scheduler
-from jupyter_scheduler.tests.mocks import MockEnvironmentManager
+from jupyter_scheduler_keepalive.orm import Base
+from jupyter_scheduler_keepalive.scheduler import Scheduler
+from jupyter_scheduler_keepalive.tests.mocks import MockEnvironmentManager
 
 pytest_plugins = ("jupyter_server.pytest_plugin", "pytest_jupyter.jupyter_server")
 
@@ -70,10 +70,10 @@ def jp_server_config(jp_scheduler_db_url, jp_server_config):
         "SchedulerApp": {
             "db_url": jp_scheduler_db_url,
             "drop_tables": True,
-            "environment_manager_class": "jupyter_scheduler.tests.mocks.MockEnvironmentManager",
+            "environment_manager_class": "jupyter_scheduler_keepalive.tests.mocks.MockEnvironmentManager",
         },
         "BaseScheduler": {
-            "execution_manager_class": "jupyter_scheduler.tests.mocks.MockExecutionManager"
+            "execution_manager_class": "jupyter_scheduler_keepalive.tests.mocks.MockExecutionManager"
         },
-        "Scheduler": {"task_runner_class": "jupyter_scheduler.tests.mocks.MockTaskRunner"},
+        "Scheduler": {"task_runner_class": "jupyter_scheduler_keepalive.tests.mocks.MockTaskRunner"},
     }
