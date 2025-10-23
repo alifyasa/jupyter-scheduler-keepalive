@@ -9,11 +9,11 @@ from pathlib import Path
 import click
 import pytz
 
-from jupyter_scheduler_keepalive.environments import CondaEnvironmentManager
-from jupyter_scheduler_keepalive.models import CreateJob, CreateJobDefinition
-from jupyter_scheduler_keepalive.orm import create_tables
-from jupyter_scheduler_keepalive.scheduler import Scheduler
-from jupyter_scheduler_keepalive.utils import get_utc_timestamp
+from jupyter_scheduler.environments import CondaEnvironmentManager
+from jupyter_scheduler.models import CreateJob, CreateJobDefinition
+from jupyter_scheduler.orm import create_tables
+from jupyter_scheduler.scheduler import Scheduler
+from jupyter_scheduler.utils import get_utc_timestamp
 
 root_dir = str(Path(__file__).parent.absolute())
 # must be specified relative to root_dir

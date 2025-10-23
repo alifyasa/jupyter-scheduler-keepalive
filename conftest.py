@@ -4,21 +4,16 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from jupyter_scheduler_keepalive.orm import Base
-from jupyter_scheduler_keepalive.scheduler import Scheduler
-from jupyter_scheduler_keepalive.tests.mocks import MockEnvironmentManager
+from jupyter_scheduler.orm import Base
+from jupyter_scheduler.scheduler import Scheduler
+from jupyter_scheduler.tests.mocks import MockEnvironmentManager
 
 pytest_plugins = ("jupyter_server.pytest_plugin", "pytest_jupyter.jupyter_server")
 
 
 @pytest.fixture(scope="session")
 def static_test_files_dir() -> Path:
-    return (
-        Path(__file__).parent.resolve()
-        / "jupyter_scheduler_keepalive"
-        / "tests"
-        / "static"
-    )
+    return Path(__file__).parent.resolve() / "jupyter_scheduler" / "tests" / "static"
 
 
 @pytest.fixture
@@ -71,16 +66,14 @@ def jp_scheduler(jp_scheduler_db_url, jp_scheduler_root_dir, jp_scheduler_db):
 @pytest.fixture
 def jp_server_config(jp_scheduler_db_url, jp_server_config):
     return {
-        "ServerApp": {"jpserver_extensions": {"jupyter_scheduler_keepalive": True}},
+        "ServerApp": {"jpserver_extensions": {"jupyter_scheduler": True}},
         "SchedulerApp": {
             "db_url": jp_scheduler_db_url,
             "drop_tables": True,
-            "environment_manager_class": "jupyter_scheduler_keepalive.tests.mocks.MockEnvironmentManager",
+            "environment_manager_class": "jupyter_scheduler.tests.mocks.MockEnvironmentManager",
         },
         "BaseScheduler": {
-            "execution_manager_class": "jupyter_scheduler_keepalive.tests.mocks.MockExecutionManager"
+            "execution_manager_class": "jupyter_scheduler.tests.mocks.MockExecutionManager"
         },
-        "Scheduler": {
-            "task_runner_class": "jupyter_scheduler_keepalive.tests.mocks.MockTaskRunner"
-        },
+        "Scheduler": {"task_runner_class": "jupyter_scheduler.tests.mocks.MockTaskRunner"},
     }

@@ -32,11 +32,11 @@ jupyter lab --SchedulerApp.db_url=sqlite:///<database-file-path>
 ### scheduler_class
 
 The fully qualified classname to use for the scheduler API. This class should
-extend `jupyter_scheduler_keepalive.scheduler.BaseScheduler` and implement all abstract
-methods. The default class is `jupyter_scheduler_keepalive.scheduler.Scheduler`.
+extend `jupyter_scheduler.scheduler.BaseScheduler` and implement all abstract
+methods. The default class is `jupyter_scheduler.scheduler.Scheduler`.
 
 ```
-jupyter lab --SchedulerApp.scheduler_class=jupyter_scheduler_keepalive.scheduler.Scheduler
+jupyter lab --SchedulerApp.scheduler_class=jupyter_scheduler.scheduler.Scheduler
 ```
 
 For more information on how to write a custom implementation, please to our {doc}`developer's guide </developers/index>`.
@@ -44,12 +44,12 @@ For more information on how to write a custom implementation, please to our {doc
 ### environment_manager_class
 
 The fully qualified classname to use for the environment manager. This class
-should extend `jupyter_scheduler_keepalive.environments.EnvironmentManager` and implement
+should extend `jupyter_scheduler.environments.EnvironmentManager` and implement
 all abstract methods. The default class is
-`jupyter_scheduler_keepalive.environments.CondaEnvironmentManager`.
+`jupyter_scheduler.environments.CondaEnvironmentManager`.
 
 ```
-jupyter lab --SchedulerApp.environment_manager_class=jupyter_scheduler_keepalive.environments.CondaEnvironmentManager
+jupyter lab --SchedulerApp.environment_manager_class=jupyter_scheduler.environments.CondaEnvironmentManager
 ```
 
 For more information on writing a custom implementation, please see the {doc}`developer's guide </developers/index>`.
@@ -60,15 +60,15 @@ The fully qualified classname to use for the execution manager, the module that
 is responsible for reading the input file, executing and writing the output.
 This option lets you specify a custom execution engine without replacing the
 whole scheduler API. This class should extend
-`jupyter_scheduler_keepalive.executors.ExecutionManager` and implement the `execute` method.
-The default class is `jupyter_scheduler_keepalive.executors.DefaultExecutionManager`.
+`jupyter_scheduler.executors.ExecutionManager` and implement the `execute` method.
+The default class is `jupyter_scheduler.executors.DefaultExecutionManager`.
 
 ```
 # This can be configured on the BaseScheduler class
-jupyter lab --BaseScheduler.execution_manager_class=jupyter_scheduler_keepalive.executors.DefaultExecutionManager
+jupyter lab --BaseScheduler.execution_manager_class=jupyter_scheduler.executors.DefaultExecutionManager
 
 # Or, on the Scheduler class directly
-jupyter lab --Scheduler.execution_manager_class=jupyter_scheduler_keepalive.executors.DefaultExecutionManager
+jupyter lab --Scheduler.execution_manager_class=jupyter_scheduler.executors.DefaultExecutionManager
 ```
 
 For more information on writing a custom implementation, please see the {doc}`developer's guide </developers/index>`.
@@ -76,12 +76,12 @@ For more information on writing a custom implementation, please see the {doc}`de
 ### job_files_manager_class
 
 The fully qualified classname to use for the job files manager. This class
-should extend `jupyter_scheduler_keepalive.job_files_manager.JobFilesManager` and implement
+should extend `jupyter_scheduler.job_files_manager.JobFilesManager` and implement
 all abstract methods. The default class is
-`jupyter_scheduler_keepalive.job_files_manager.JobFilesManager`.
+`jupyter_scheduler.job_files_manager.JobFilesManager`.
 
 ```
-jupyter lab --SchedulerApp.job_files_manager_class=jupyter_scheduler_keepalive.job_files_manager.JobFilesManager
+jupyter lab --SchedulerApp.job_files_manager_class=jupyter_scheduler.job_files_manager.JobFilesManager
 ```
 
 For more information on writing a custom implementation, please see the {doc}`developer's guide </developers/index>`.
@@ -96,8 +96,8 @@ side effect files, you can use these classes by running:
 
 ```
 jupyter lab \
-  --SchedulerApp.scheduler_class=jupyter_scheduler_keepalive.scheduler.ArchivingScheduler \
-  --Scheduler.execution_manager_class=jupyter_scheduler_keepalive.executors.ArchivingExecutionManager
+  --SchedulerApp.scheduler_class=jupyter_scheduler.scheduler.ArchivingScheduler \
+  --Scheduler.execution_manager_class=jupyter_scheduler.executors.ArchivingExecutionManager
 ```
 
 ## UI configuration

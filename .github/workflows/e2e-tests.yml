@@ -36,7 +36,7 @@ jobs:
           python -m pip install .
 
           jupyter server extension list
-          jupyter server extension list 2>&1 | grep -ie "jupyter_scheduler_keepalive.*OK"
+          jupyter server extension list 2>&1 | grep -ie "jupyter_scheduler.*OK"
 
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "@jupyterlab/scheduler.*OK"
