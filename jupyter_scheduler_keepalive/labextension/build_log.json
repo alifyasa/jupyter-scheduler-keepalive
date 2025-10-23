@@ -9,10 +9,7 @@
         },
         {
           "test": "/(?<!\\.raw)\\.css$/",
-          "use": [
-            "style-loader",
-            "css-loader"
-          ]
+          "use": ["style-loader", "css-loader"]
         },
         {
           "test": "/\\.txt$/",
@@ -80,9 +77,7 @@
         {
           "test": "/\\.js$/",
           "enforce": "pre",
-          "use": [
-            "source-map-loader"
-          ]
+          "use": ["source-map-loader"]
         }
       ]
     },
@@ -116,10 +111,7 @@
           "name": "@jupyterlab/scheduler",
           "library": {
             "type": "var",
-            "name": [
-              "_JUPYTERLAB",
-              "@jupyterlab/scheduler"
-            ]
+            "name": ["_JUPYTERLAB", "@jupyterlab/scheduler"]
           },
           "filename": "remoteEntry.[contenthash].js",
           "exposes": {
