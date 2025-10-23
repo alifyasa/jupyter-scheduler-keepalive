@@ -13,7 +13,12 @@ pytest_plugins = ("jupyter_server.pytest_plugin", "pytest_jupyter.jupyter_server
 
 @pytest.fixture(scope="session")
 def static_test_files_dir() -> Path:
-    return Path(__file__).parent.resolve() / "jupyter_scheduler" / "tests" / "static"
+    return (
+        Path(__file__).parent.resolve()
+        / "jupyter_scheduler_keepalive"
+        / "tests"
+        / "static"
+    )
 
 
 @pytest.fixture
@@ -66,7 +71,7 @@ def jp_scheduler(jp_scheduler_db_url, jp_scheduler_root_dir, jp_scheduler_db):
 @pytest.fixture
 def jp_server_config(jp_scheduler_db_url, jp_server_config):
     return {
-        "ServerApp": {"jpserver_extensions": {"jupyter_scheduler": True}},
+        "ServerApp": {"jpserver_extensions": {"jupyter_scheduler_keepalive": True}},
         "SchedulerApp": {
             "db_url": jp_scheduler_db_url,
             "drop_tables": True,
@@ -75,5 +80,7 @@ def jp_server_config(jp_scheduler_db_url, jp_server_config):
         "BaseScheduler": {
             "execution_manager_class": "jupyter_scheduler_keepalive.tests.mocks.MockExecutionManager"
         },
-        "Scheduler": {"task_runner_class": "jupyter_scheduler_keepalive.tests.mocks.MockTaskRunner"},
+        "Scheduler": {
+            "task_runner_class": "jupyter_scheduler_keepalive.tests.mocks.MockTaskRunner"
+        },
     }
