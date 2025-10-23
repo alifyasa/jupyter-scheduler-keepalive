@@ -2,7 +2,7 @@ from typing import Dict
 
 from nbformat import NotebookNode, v4
 
-from jupyter_scheduler.utils import find_cell_index_with_tag
+from jupyter_scheduler_keepalive.utils import find_cell_index_with_tag
 
 
 def add_parameters(nb: NotebookNode, parameters: Dict[str, str]) -> NotebookNode:

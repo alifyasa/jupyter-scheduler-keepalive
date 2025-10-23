@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from jupyter_scheduler.environments import EnvironmentManager
-from jupyter_scheduler.executors import ExecutionManager
-from jupyter_scheduler.models import JobFeature, RuntimeEnvironment, UpdateJobDefinition
-from jupyter_scheduler.task_runner import BaseTaskRunner
+from jupyter_scheduler_keepalive.environments import EnvironmentManager
+from jupyter_scheduler_keepalive.executors import ExecutionManager
+from jupyter_scheduler_keepalive.models import JobFeature, RuntimeEnvironment, UpdateJobDefinition
+from jupyter_scheduler_keepalive.task_runner import BaseTaskRunner
 
 
 class MockExecutionManager(ExecutionManager):

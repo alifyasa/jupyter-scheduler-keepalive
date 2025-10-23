@@ -6,13 +6,13 @@ from jupyter_server.extension.handler import ExtensionHandlerMixin
 from jupyter_server.utils import ensure_async
 from tornado.web import HTTPError, authenticated
 
-from jupyter_scheduler.environments import EnvironmentRetrievalError
-from jupyter_scheduler.exceptions import (
+from jupyter_scheduler_keepalive.environments import EnvironmentRetrievalError
+from jupyter_scheduler_keepalive.exceptions import (
     IdempotencyTokenError,
     InputUriError,
     SchedulerError,
 )
-from jupyter_scheduler.models import (
+from jupyter_scheduler_keepalive.models import (
     DEFAULT_MAX_ITEMS,
     DEFAULT_SORT,
     CountJobsQuery,
@@ -27,7 +27,7 @@ from jupyter_scheduler.models import (
     UpdateJob,
     UpdateJobDefinition,
 )
-from jupyter_scheduler.pydantic_v1 import ValidationError
+from jupyter_scheduler_keepalive.pydantic_v1 import ValidationError
 
 
 class JobHandlersMixin:

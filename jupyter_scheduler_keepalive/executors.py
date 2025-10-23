@@ -11,10 +11,10 @@ import nbconvert
 import nbformat
 from nbconvert.preprocessors import CellExecutionError, ExecutePreprocessor
 
-from jupyter_scheduler.models import DescribeJob, JobFeature, Status
-from jupyter_scheduler.orm import Job, create_session
-from jupyter_scheduler.parameterize import add_parameters
-from jupyter_scheduler.utils import get_utc_timestamp
+from jupyter_scheduler_keepalive.models import DescribeJob, JobFeature, Status
+from jupyter_scheduler_keepalive.orm import Job, create_session
+from jupyter_scheduler_keepalive.parameterize import add_parameters
+from jupyter_scheduler_keepalive.utils import get_utc_timestamp
 
 
 class ExecutionManager(ABC):
@@ -207,7 +207,7 @@ class ArchivingExecutionManager(DefaultExecutionManager):
 
     Notes
     -----
-    Should be used along with :class:`~jupyter_scheduler.scheduler.ArchivingScheduler`
+    Should be used along with :class:`~jupyter_scheduler_keepalive.scheduler.ArchivingScheduler`
     as the `scheduler_class` during jupyter server start.
     """
 

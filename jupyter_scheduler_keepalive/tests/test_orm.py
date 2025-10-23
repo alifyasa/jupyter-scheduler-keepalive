@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import Column, Integer, String, inspect
 from sqlalchemy.orm import DeclarativeMeta, sessionmaker
 
-from jupyter_scheduler.orm import (
+from jupyter_scheduler_keepalive.orm import (
     create_session,
     create_tables,
     declarative_base,

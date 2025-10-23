@@ -7,8 +7,8 @@ from sqlalchemy import Boolean, Column, Integer, String, create_engine, inspect
 from sqlalchemy.orm import declarative_base, declarative_mixin, registry, sessionmaker
 from sqlalchemy.sql import text
 
-from jupyter_scheduler.models import EmailNotifications, Status
-from jupyter_scheduler.utils import get_utc_timestamp
+from jupyter_scheduler_keepalive.models import EmailNotifications, Status
+from jupyter_scheduler_keepalive.utils import get_utc_timestamp
 
 Base = declarative_base()
 

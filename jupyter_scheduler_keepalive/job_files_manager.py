@@ -7,8 +7,8 @@ from typing import Dict, List, Optional, Type
 import fsspec
 from jupyter_server.utils import ensure_async
 
-from jupyter_scheduler.exceptions import SchedulerError
-from jupyter_scheduler.scheduler import BaseScheduler
+from jupyter_scheduler_keepalive.exceptions import SchedulerError
+from jupyter_scheduler_keepalive.scheduler import BaseScheduler
 
 
 class JobFilesManager:
@@ -117,7 +117,7 @@ class JobFilesManagerWithErrors(JobFilesManager):
 
     Usage
     -----
-    >> jupyter lab --SchedulerApp.job_files_manager_class=jupyter_scheduler.job_files_manager.JobFilesManagerWithErrors
+    >> jupyter lab --SchedulerApp.job_files_manager_class=jupyter_scheduler_keepalive.job_files_manager.JobFilesManagerWithErrors
     """
 
     def _should_raise_error(self, probability=0.5):

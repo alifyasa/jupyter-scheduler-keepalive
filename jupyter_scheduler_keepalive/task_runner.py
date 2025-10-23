@@ -10,10 +10,10 @@ from sqlalchemy import Boolean, Column, Integer, String, create_engine
 from sqlalchemy.orm import sessionmaker
 from traitlets.config import LoggingConfigurable
 
-from jupyter_scheduler.models import CreateJob, UpdateJobDefinition
-from jupyter_scheduler.orm import JobDefinition, declarative_base
-from jupyter_scheduler.pydantic_v1 import BaseModel
-from jupyter_scheduler.utils import (
+from jupyter_scheduler_keepalive.models import CreateJob, UpdateJobDefinition
+from jupyter_scheduler_keepalive.orm import JobDefinition, declarative_base
+from jupyter_scheduler_keepalive.pydantic_v1 import BaseModel
+from jupyter_scheduler_keepalive.utils import (
     compute_next_run_time,
     get_localized_timestamp,
     get_utc_timestamp,

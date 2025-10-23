@@ -1,1 +1,1 @@
-"""Python unit tests for jupyter_scheduler."""
+"""Python unit tests for jupyter_scheduler_keepalive."""

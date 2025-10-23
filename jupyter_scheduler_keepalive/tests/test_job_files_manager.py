@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 import pytest
 
-from jupyter_scheduler.job_files_manager import Downloader, JobFilesManager
-from jupyter_scheduler.models import DescribeJob, JobFile
+from jupyter_scheduler_keepalive.job_files_manager import Downloader, JobFilesManager
+from jupyter_scheduler_keepalive.models import DescribeJob, JobFile
 
 
 async def test_copy_from_staging():
@@ -40,9 +40,9 @@ async def test_copy_from_staging():
         "input": "helloworld.ipynb",
     }
     output_dir = "jobs/1"
-    with patch("jupyter_scheduler.job_files_manager.Downloader") as mock_downloader:
-        with patch("jupyter_scheduler.job_files_manager.Process") as mock_process:
-            with patch("jupyter_scheduler.scheduler.Scheduler") as mock_scheduler:
+    with patch("jupyter_scheduler_keepalive.job_files_manager.Downloader") as mock_downloader:
+        with patch("jupyter_scheduler_keepalive.job_files_manager.Process") as mock_process:
+            with patch("jupyter_scheduler_keepalive.scheduler.Scheduler") as mock_scheduler:
                 mock_scheduler.get_job.return_value = job
                 mock_scheduler.get_staging_paths.return_value = staging_paths
                 mock_scheduler.get_local_output_path.return_value = output_dir

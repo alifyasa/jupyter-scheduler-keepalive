@@ -4,8 +4,8 @@ from typing import Tuple
 
 import pytest
 
-from jupyter_scheduler.executors import DefaultExecutionManager
-from jupyter_scheduler.orm import Job
+from jupyter_scheduler_keepalive.executors import DefaultExecutionManager
+from jupyter_scheduler_keepalive.orm import Job
 
 
 @pytest.fixture

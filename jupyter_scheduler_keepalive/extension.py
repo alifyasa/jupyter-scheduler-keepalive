@@ -6,7 +6,7 @@ from jupyter_server.extension.application import ExtensionApp
 from jupyter_server.transutils import _i18n
 from traitlets import Bool, Type, Unicode, default
 
-from jupyter_scheduler.orm import create_tables
+from jupyter_scheduler_keepalive.orm import create_tables
 
 from .handlers import (
     BatchJobHandler,
@@ -47,22 +47,22 @@ class SchedulerApp(ExtensionApp):
         return f"sqlite:///{jupyter_data_dir()}/scheduler.sqlite"
 
     environment_manager_class = Type(
-        default_value="jupyter_scheduler.environments.CondaEnvironmentManager",
-        klass="jupyter_scheduler.environments.EnvironmentManager",
+        default_value="jupyter_scheduler_keepalive.environments.CondaEnvironmentManager",
+        klass="jupyter_scheduler_keepalive.environments.EnvironmentManager",
         config=True,
         help=_i18n("The runtime environment manager class to use."),
     )
 
     scheduler_class = Type(
-        default_value="jupyter_scheduler.scheduler.Scheduler",
-        klass="jupyter_scheduler.scheduler.BaseScheduler",
+        default_value="jupyter_scheduler_keepalive.scheduler.Scheduler",
+        klass="jupyter_scheduler_keepalive.scheduler.BaseScheduler",
         config=True,
         help=_i18n("The scheduler class to use."),
     )
 
     job_files_manager_class = Type(
-        default_value="jupyter_scheduler.job_files_manager.JobFilesManager",
-        klass="jupyter_scheduler.job_files_manager.JobFilesManager",
+        default_value="jupyter_scheduler_keepalive.job_files_manager.JobFilesManager",
+        klass="jupyter_scheduler_keepalive.job_files_manager.JobFilesManager",
         config=True,
         help=_i18n("The job files manager class to use."),
     )

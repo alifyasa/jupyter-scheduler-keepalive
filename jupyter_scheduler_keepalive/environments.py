@@ -5,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from typing import Dict, List
 
-from jupyter_scheduler.models import RuntimeEnvironment
+from jupyter_scheduler_keepalive.models import RuntimeEnvironment
 
 
 class EnvironmentManager(ABC):

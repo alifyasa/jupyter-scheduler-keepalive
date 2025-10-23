@@ -15,13 +15,13 @@ from traitlets import Type as TType
 from traitlets import Unicode, default
 from traitlets.config import LoggingConfigurable
 
-from jupyter_scheduler.environments import EnvironmentManager
-from jupyter_scheduler.exceptions import (
+from jupyter_scheduler_keepalive.environments import EnvironmentManager
+from jupyter_scheduler_keepalive.exceptions import (
     IdempotencyTokenError,
     InputUriError,
     SchedulerError,
 )
-from jupyter_scheduler.models import (
+from jupyter_scheduler_keepalive.models import (
     CountJobsQuery,
     CreateJob,
     CreateJobDefinition,
@@ -38,8 +38,8 @@ from jupyter_scheduler.models import (
     UpdateJob,
     UpdateJobDefinition,
 )
-from jupyter_scheduler.orm import Job, JobDefinition, create_session
-from jupyter_scheduler.utils import (
+from jupyter_scheduler_keepalive.orm import Job, JobDefinition, create_session
+from jupyter_scheduler_keepalive.utils import (
     copy_directory,
     create_output_directory,
     create_output_filename,
@@ -82,8 +82,8 @@ class BaseScheduler(LoggingConfigurable):
 
     execution_manager_class = TType(
         allow_none=True,
-        klass="jupyter_scheduler.executors.ExecutionManager",
-        default_value="jupyter_scheduler.executors.DefaultExecutionManager",
+        klass="jupyter_scheduler_keepalive.executors.ExecutionManager",
+        default_value="jupyter_scheduler_keepalive.executors.DefaultExecutionManager",
         config=True,
         help=_i18n("The execution manager class to use."),
     )
@@ -91,7 +91,7 @@ class BaseScheduler(LoggingConfigurable):
     root_dir = Unicode(help=_i18n("Jupyter server root directory"))
 
     environments_manager = Instance(
-        klass="jupyter_scheduler.environments.EnvironmentManager",
+        klass="jupyter_scheduler_keepalive.environments.EnvironmentManager",
         help=_i18n("Environment manager instance"),
     )
 
@@ -394,8 +394,8 @@ class Scheduler(BaseScheduler):
     task_runner_class = TType(
         allow_none=True,
         config=True,
-        default_value="jupyter_scheduler.task_runner.TaskRunner",
-        klass="jupyter_scheduler.task_runner.BaseTaskRunner",
+        default_value="jupyter_scheduler_keepalive.task_runner.TaskRunner",
+        klass="jupyter_scheduler_keepalive.task_runner.BaseTaskRunner",
         help=_i18n(
             "The class that handles the job creation of scheduled jobs from job definitions."
         ),
@@ -403,7 +403,7 @@ class Scheduler(BaseScheduler):
 
     db_url = Unicode(help=_i18n("Scheduler database url"))
 
-    task_runner = Instance(allow_none=True, klass="jupyter_scheduler.task_runner.BaseTaskRunner")
+    task_runner = Instance(allow_none=True, klass="jupyter_scheduler_keepalive.task_runner.BaseTaskRunner")
 
     def __init__(
         self,
@@ -794,8 +794,8 @@ class ArchivingScheduler(Scheduler):
     """Scheduler that captures all files in output directory in an archive."""
 
     execution_manager_class = TType(
-        klass="jupyter_scheduler.executors.ExecutionManager",
-        default_value="jupyter_scheduler.executors.ArchivingExecutionManager",
+        klass="jupyter_scheduler_keepalive.executors.ExecutionManager",
+        default_value="jupyter_scheduler_keepalive.executors.ArchivingExecutionManager",
         config=True,
     )
 
@@ -835,7 +835,7 @@ class SchedulerWithErrors(Scheduler):
 
     Usage
     -----
-    >> jupyter lab --SchedulerApp.scheduler_class=jupyter_scheduler.scheduler.SchedulerWithErrors
+    >> jupyter lab --SchedulerApp.scheduler_class=jupyter_scheduler_keepalive.scheduler.SchedulerWithErrors
     """
 
     def _should_raise_error(self, probability=0.5):

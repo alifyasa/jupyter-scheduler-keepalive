@@ -4,13 +4,13 @@ from unittest.mock import patch
 import pytest
 from tornado.httpclient import HTTPClientError
 
-from jupyter_scheduler.exceptions import (
+from jupyter_scheduler_keepalive.exceptions import (
     IdempotencyTokenError,
     InputUriError,
     SchedulerError,
 )
-from jupyter_scheduler.handlers import compute_sort_model
-from jupyter_scheduler.models import (
+from jupyter_scheduler_keepalive.handlers import compute_sort_model
+from jupyter_scheduler_keepalive.models import (
     CountJobsQuery,
     DescribeJob,
     ListJobsQuery,
@@ -20,8 +20,8 @@ from jupyter_scheduler.models import (
     Status,
     UpdateJob,
 )
-from jupyter_scheduler.pydantic_v1 import ValidationError
-from jupyter_scheduler.tests.utils import expected_http_error
+from jupyter_scheduler_keepalive.pydantic_v1 import ValidationError
+from jupyter_scheduler_keepalive.tests.utils import expected_http_error
 
 
 @pytest.mark.parametrize(
@@ -53,7 +53,7 @@ from jupyter_scheduler.tests.utils import expected_http_error
     ],
 )
 async def test_post_jobs(jp_fetch, job_id, payload):
-    with patch("jupyter_scheduler.scheduler.Scheduler.create_job") as mock_create_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.create_job") as mock_create_job:
         mock_create_job.return_value = job_id
         response = await jp_fetch("scheduler", "jobs", method="POST", body=json.dumps(payload))
 
@@ -71,7 +71,7 @@ async def test_post_jobs_for_invalid_input_uri(jp_fetch):
         "idempotency_token": "a",
     }
     input_path = payload["input_uri"]
-    with patch("jupyter_scheduler.scheduler.Scheduler.create_job") as mock_create_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.create_job") as mock_create_job:
         mock_create_job.side_effect = InputUriError(input_path)
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("scheduler", "jobs", method="POST", body=json.dumps(payload))
@@ -88,7 +88,7 @@ async def test_post_jobs_for_idempotency_token_error(jp_fetch):
         "idempotency_token": "a",
     }
     idempotency_token = payload["idempotency_token"]
-    with patch("jupyter_scheduler.scheduler.Scheduler.create_job") as mock_create_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.create_job") as mock_create_job:
         mock_create_job.side_effect = IdempotencyTokenError(idempotency_token)
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("scheduler", "jobs", method="POST", body=json.dumps(payload))
@@ -105,7 +105,7 @@ async def test_post_jobs_for_unexpected_error(jp_fetch):
         "runtime_environment_name": "env_a",
         "idempotency_token": "a",
     }
-    with patch("jupyter_scheduler.scheduler.Scheduler.create_job") as mock_create_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.create_job") as mock_create_job:
         mock_create_job.side_effect = Exception("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("scheduler", "jobs", method="POST", body=json.dumps(payload))
@@ -113,7 +113,7 @@ async def test_post_jobs_for_unexpected_error(jp_fetch):
 
 
 async def test_get_jobs_for_single_job(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.get_job") as mock_get_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.get_job") as mock_get_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         mock_get_job.return_value = DescribeJob(
             name="job_a",
@@ -222,7 +222,7 @@ async def test_get_jobs_for_single_job(jp_fetch):
 async def test_get_jobs(jp_fetch, params, list_query, jobs_list):
     expected_query = ListJobsQuery(**list_query)
     expected_jobs = ListJobsResponse(**jobs_list)
-    with patch("jupyter_scheduler.scheduler.Scheduler.list_jobs") as mock_list_jobs:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.list_jobs") as mock_list_jobs:
         mock_list_jobs.return_value = expected_jobs
         response = await jp_fetch("scheduler", "jobs", method="GET", params=params)
 
@@ -240,7 +240,7 @@ async def test_get_jobs(jp_fetch, params, list_query, jobs_list):
 
 
 async def test_get_job_for_scheduler_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.get_job") as mock_get_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.get_job") as mock_get_job:
         mock_get_job.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch(
@@ -250,7 +250,7 @@ async def test_get_job_for_scheduler_error(jp_fetch):
 
 
 async def test_get_job_for_unexpected_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.get_job") as mock_list_jobs:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.get_job") as mock_list_jobs:
         mock_list_jobs.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch(
@@ -270,7 +270,7 @@ async def test_get_jobs_for_validation_error(jp_fetch):
 
 
 async def test_get_jobs_for_scheduler_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.list_jobs") as mock_list_jobs:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.list_jobs") as mock_list_jobs:
         mock_list_jobs.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("scheduler", "jobs", method="GET")
@@ -278,7 +278,7 @@ async def test_get_jobs_for_scheduler_error(jp_fetch):
 
 
 async def test_get_jobs_for_unexpected_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.list_jobs") as mock_list_jobs:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.list_jobs") as mock_list_jobs:
         mock_list_jobs.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("scheduler", "jobs", method="GET")
@@ -286,7 +286,7 @@ async def test_get_jobs_for_unexpected_error(jp_fetch):
 
 
 async def test_patch_jobs_for_status(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.stop_job") as mock_stop_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.stop_job") as mock_stop_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         body = {"status": "STOPPED"}
         response = await jp_fetch(
@@ -310,7 +310,7 @@ async def test_patch_jobs_for_invalid_status(jp_fetch):
 
 
 async def test_patch_jobs(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.update_job") as mock_update_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.update_job") as mock_update_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         body = {"name": "hello world", "compute_type": "compute_type_a"}
         response = await jp_fetch(
@@ -321,7 +321,7 @@ async def test_patch_jobs(jp_fetch):
 
 
 async def test_patch_jobs_for_stop_job(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.stop_job") as mock_stop_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.stop_job") as mock_stop_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         response = await jp_fetch(
             "scheduler", "jobs", job_id, method="PATCH", body=json.dumps({"status": "STOPPED"})
@@ -332,7 +332,7 @@ async def test_patch_jobs_for_stop_job(jp_fetch):
 
 
 async def test_patch_jobs_for_name_update(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.stop_job") as mock_stop_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.stop_job") as mock_stop_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         response = await jp_fetch(
             "scheduler", "jobs", job_id, method="PATCH", body=json.dumps({"status": "STOPPED"})
@@ -356,7 +356,7 @@ async def test_patch_jobs_for_validation_error(jp_fetch):
 
 
 async def test_patch_jobs_for_scheduler_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.update_job") as mock_update_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.update_job") as mock_update_job:
         mock_update_job.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch(
@@ -370,7 +370,7 @@ async def test_patch_jobs_for_scheduler_error(jp_fetch):
 
 
 async def test_patch_jobs_for_unexpected_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.update_job") as mock_update_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.update_job") as mock_update_job:
         mock_update_job.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch(
@@ -384,7 +384,7 @@ async def test_patch_jobs_for_unexpected_error(jp_fetch):
 
 
 async def test_delete_job(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.delete_job") as mock_delete_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job") as mock_delete_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         response = await jp_fetch("scheduler", "jobs", job_id, method="DELETE")
 
@@ -393,7 +393,7 @@ async def test_delete_job(jp_fetch):
 
 
 async def test_delete_job_for_scheduler_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.delete_job") as mock_delete_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job") as mock_delete_job:
         mock_delete_job.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
             job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
@@ -402,7 +402,7 @@ async def test_delete_job_for_scheduler_error(jp_fetch):
 
 
 async def test_delete_job_for_unexpected_error(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.delete_job") as mock_delete_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job") as mock_delete_job:
         mock_delete_job.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
             job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
@@ -411,7 +411,7 @@ async def test_delete_job_for_unexpected_error(jp_fetch):
 
 
 async def test_batch_delete(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.delete_job") as mock_delete_job:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job") as mock_delete_job:
         job_id = "542e0fac-1274-4a78-8340-a850bdb559c8"
         response = await jp_fetch(
             "scheduler", "batch", "jobs", method="DELETE", params={"job_id": job_id}
@@ -422,7 +422,7 @@ async def test_batch_delete(jp_fetch):
 
 
 async def test_jobs_count(jp_fetch):
-    with patch("jupyter_scheduler.scheduler.Scheduler.count_jobs") as mock_count_jobs:
+    with patch("jupyter_scheduler_keepalive.scheduler.Scheduler.count_jobs") as mock_count_jobs:
         mock_count_jobs.return_value = 10
         response = await jp_fetch(
             "scheduler", "jobs", "count", method="GET", params={"status": "COMPLETED"}
@@ -497,7 +497,7 @@ async def test_post_job_from_job_definition_for_validation_error(jp_fetch):
 
 async def test_post_job_from_job_definition_for_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.create_job_from_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.create_job_from_definition"
     ) as mock_create_job:
         mock_create_job.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -509,7 +509,7 @@ async def test_post_job_from_job_definition_for_scheduler_error(jp_fetch):
 
 async def test_post_job_from_job_definition_for_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.create_job_from_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.create_job_from_definition"
     ) as mock_create_job:
         mock_create_job.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
@@ -521,7 +521,7 @@ async def test_post_job_from_job_definition_for_unexpected_error(jp_fetch):
 
 async def test_get_job_definition_for_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.get_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.get_job_definition"
     ) as mock_get_job_definition:
         mock_get_job_definition.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -531,7 +531,7 @@ async def test_get_job_definition_for_scheduler_error(jp_fetch):
 
 async def test_get_job_definition_for_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.get_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.get_job_definition"
     ) as mock_get_job_definition:
         mock_get_job_definition.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
@@ -553,7 +553,7 @@ async def test_get_job_definitions_for_validation_error(jp_fetch):
 
 async def test_get_job_definitions_for_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.list_job_definitions"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.list_job_definitions"
     ) as mock_list_job_definitions:
         mock_list_job_definitions.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -563,7 +563,7 @@ async def test_get_job_definitions_for_scheduler_error(jp_fetch):
 
 async def test_get_job_definitions_for_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.list_job_definitions"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.list_job_definitions"
     ) as mock_list_job_definitions:
         mock_list_job_definitions.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
@@ -586,7 +586,7 @@ async def test_post_job_definition_for_validation_error(jp_fetch):
 
 async def test_post_job_definition_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.create_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.create_job_definition"
     ) as mock_create_job_definition:
         mock_create_job_definition.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -601,7 +601,7 @@ async def test_post_job_definition_scheduler_error(jp_fetch):
 
 async def test_post_job_definition_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.create_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.create_job_definition"
     ) as mock_create_job_definition:
         mock_create_job_definition.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
@@ -631,7 +631,7 @@ async def test_patch_job_definition_for_validation_error(jp_fetch):
 
 async def test_patch_job_definition_for_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.update_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.update_job_definition"
     ) as mock_update_job_definition:
         mock_update_job_definition.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -644,7 +644,7 @@ async def test_patch_job_definition_for_scheduler_error(jp_fetch):
 
 async def test_patch_job_definition_for_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.update_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.update_job_definition"
     ) as mock_update_job_definition:
         mock_update_job_definition.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
@@ -659,7 +659,7 @@ async def test_patch_job_definition_for_unexpected_error(jp_fetch):
 
 async def test_delete_job_definition_for_scheduler_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.delete_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job_definition"
     ) as mock_delete_job_definition:
         mock_delete_job_definition.side_effect = SchedulerError("Scheduler error")
         with pytest.raises(HTTPClientError) as e:
@@ -669,7 +669,7 @@ async def test_delete_job_definition_for_scheduler_error(jp_fetch):
 
 async def test_delete_job_definition_for_unexpected_error(jp_fetch):
     with patch(
-        "jupyter_scheduler.scheduler.Scheduler.delete_job_definition"
+        "jupyter_scheduler_keepalive.scheduler.Scheduler.delete_job_definition"
     ) as mock_delete_job_definition:
         mock_delete_job_definition.side_effect = ValueError("Unexpected error")
         with pytest.raises(HTTPClientError) as e:
