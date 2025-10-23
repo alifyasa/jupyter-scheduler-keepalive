@@ -64,6 +64,9 @@ ignore = ["W002"]
 [tool.hatch.build]
 artifacts = ["jupyter_scheduler/labextension"]
 
+[tool.hatch.build.targets.wheel]
+packages = ["jupyter_scheduler"]
+
 [tool.hatch.build.targets.wheel.shared-data]
 "jupyter_scheduler/labextension" = "share/jupyter/labextensions/@jupyterlab/scheduler"
 "install.json" = "share/jupyter/labextensions/jupyter_scheduler/install.json"
