@@ -3,7 +3,7 @@ requires = ["hatchling>=1.3.1", "jupyterlab~=4.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jupyter_scheduler_keepalive"
+name = "jupyter-scheduler-keepalive"
 version = "2.10.0+patch1"
 description = "A JupyterLab extension for running notebook jobs"
 readme = "README.md"
