@@ -394,6 +394,13 @@ class ConfigHandler(ExtensionHandlerMixin, JobHandlersMixin, APIHandler):
         )
 
 
+class LastActivityHandler(ExtensionHandlerMixin, APIHandler):
+    @authenticated
+    def get(self):
+        last_activity_times = self.serverapp.web_app.settings["last_activity_times"]
+        self.finish(json.dumps({"last_activity": last_activity_times.get("jupyter_scheduler")}))
+
+
 class FilesDownloadHandler(ExtensionHandlerMixin, APIHandler):
     _job_files_manager = None
 

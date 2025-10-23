@@ -17,6 +17,7 @@ from .handlers import (
     JobHandler,
     JobsCountHandler,
     RuntimeEnvironmentsHandler,
+    LastActivityHandler,
 )
 
 JOB_DEFINITION_ID_REGEX = r"(?P<job_definition_id>\w+(?:-\w+)+)"
@@ -36,6 +37,7 @@ class SchedulerApp(ExtensionApp):
         (r"scheduler/job_definitions/%s/jobs" % JOB_DEFINITION_ID_REGEX, JobFromDefinitionHandler),
         (r"scheduler/runtime_environments", RuntimeEnvironmentsHandler),
         (r"scheduler/config", ConfigHandler),
+        (r"scheduler/last_activity", LastActivityHandler),
     ]
 
     drop_tables = Bool(False, config=True, help="Drop the database tables before starting.")
